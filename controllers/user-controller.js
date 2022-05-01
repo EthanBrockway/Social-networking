@@ -1,4 +1,4 @@
-const { User } = require("../models.");
+const { User } = require("../models");
 
 const userController = {
   // finds all users
@@ -11,3 +11,4 @@ const userController = {
       });
   },
 };
+module.exports = userController;
