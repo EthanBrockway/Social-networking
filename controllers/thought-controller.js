@@ -3,10 +3,11 @@ const { db } = require("../models/User");
 
 const thoughtController = {
   getAllThoughts(req, res) {
-    Thought.find({}).then((dbThoughtData) => res.json(dbThoughtData));
+    Thought.find({})
+      .populate({ path: "reactions", select: "-__v" })
+      .then((dbThoughtData) => res.json(dbThoughtData));
   },
   getThoughtById({ params }, res) {
-    console.log({ params });
     Thought.findOne({ _id: params.thoughtId })
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
@@ -68,6 +69,28 @@ const thoughtController = {
           { new: true }
         );
       })
+      .then((dbThoughtData) => {
+        if (!dbThoughtData) {
+          res.status(404).json({ message: "No thought found with this id!" });
+          return;
+        }
+        res.json(dbThoughtData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  },
+  addReaction({ params, body }, res) {
+    Thought.findOneAndUpdate(
+      { _id: params.thoughtId },
+      {
+        $addToSet: {
+          reactions: body,
+        },
+      },
+      { new: true }
+    )
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
           res.status(404).json({ message: "No thought found with this id!" });
