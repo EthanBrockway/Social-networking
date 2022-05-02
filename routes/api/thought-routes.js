@@ -8,10 +8,7 @@ const {
 } = require("../../controllers/thought-controller.js");
 
 router.route("/").get(getAllThoughts).post(postThoughts);
-router
-  .route("/:thoughtId")
-  .get(getThoughtById)
-  .put(updateThought)
-  .delete(removeThought);
+router.route("/:thoughtId").get(getThoughtById).put(updateThought);
+router.route("/:thoughtId/:userId").delete(removeThought);
 
 module.exports = router;
