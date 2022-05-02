@@ -54,6 +54,9 @@ const thoughtController = {
         res.status(500).json(err);
       });
   },
+  deleteThought({ params }, res) {
+    Thought.findByIdAndDelete({ _id: params.thoughtId });
+  },
 };
 
 module.exports = thoughtController;
